@@ -1,0 +1,311 @@
+<!-- Ported by Martin_MMC -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_blank">
+
+
+    <meta charset="UTF-8">
+    <title>Blue Basket Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #0f172a, #1e293b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bfdbfe;
+        }
+
+        .chat-container {
+            width: 95%;
+            max-width: 900px;
+            height: 90vh;
+            background: #1e293b;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 18px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #3b82f6;
+            background: #0f172a;
+        }
+
+        .center {
+            padding: 30px;
+            text-align: center;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: none;
+            background: #334155;
+            color: #bfdbfe;
+        }
+
+        button {
+            padding: 12px 18px;
+            margin: 5px;
+            border-radius: 10px;
+            border: none;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 8px;
+        }
+
+        .name {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .admin-name {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            cursor: pointer;
+            color: #f87171;
+            margin-left: 8px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            padding: 14px;
+            background: #0f172a;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- AUTH -->
+    <div class="chat-container" id="authScreen" style="display: none;">
+        <div class="header">Blue Basket Login</div>
+        <div class="center">
+            <input id="usernameInput" placeholder="Username (max 20)">
+            <input id="passwordInput" type="password" placeholder="Password (8–12 chars)">
+            <br>
+            <button onclick="signUp()">Sign Up</button>
+            <button onclick="signIn()">Sign In</button>
+            <p id="authError" class="error"></p>
+        </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-container" id="chatScreen" style="display: flex;">
+        <div class="header">💬 Blue Basket Chat</div>
+        <div class="messages" id="messages">
+            <div class="message" id="-OijEg0A3-E4Ef-FJPSF"><span class="name">hawkpupa: </span><span>wowow</span></div>
+            <div class="message" id="-OijL0byIvzeHUW820MK"><span class="name">ownerr: </span><span>im owner</span></div>
+            <div class="message" id="-Oij_oVy1ZgJHWSqHOjr"><span class="admin-name">MrE_Owner 🛠: </span><span>hi</span></div>
+            <div class="message" id="-Oija5jcy2R4Q7GoaNW-"><span class="admin-name">MrE_Owner 🛠: </span><span>hey</span></div>
+            <div class="message" id="-OijcRzIxdX6ch6KBgsA"><span class="name">nigger: </span><span>hi</span></div>
+            <div class="message" id="-OijcUAvbAhH3bjDQAL_"><span class="name">nigger: </span><span>NO WAY THIS CRAP WORKS</span></div>
+        </div>
+        <div class="input-area">
+            <input id="messageInput" placeholder="Message (max 1000)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        /* ===== ADMIN ===== */
+        const ADMIN_NAME = "MrE_Owner";
+
+        /* ===== FIREBASE ===== */
+        firebase.initializeApp({
+            apiKey: "AIzaSyDXTnodfstyA4wtwTQ34trFIdp2u7D_W3w",
+            authDomain: "bluebasket-chatroom.firebaseapp.com",
+            databaseURL: "https://bluebasket-chatroom-default-rtdb.firebaseio.com",
+            projectId: "bluebasket-chatroom"
+        });
+
+        const auth = firebase.auth();
+        const db = firebase.database();
+        const chatRef = db.ref("messages");
+        const usersRef = db.ref("users");
+
+        let username = null;
+        let lastMessageTime = 0;
+
+        /* ===== STRONG PROFANITY FILTER ===== */
+        const bannedWords = [
+            "fuck", "shit", "bitch", "asshole", "dick", "pussy", "cunt",
+            "nigger", "fag", "slut", "whore", "cock", "retard"
+        ];
+
+        function normalizeText(text) {
+            return text
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[@4]/g, "a")
+                .replace(/[!1|]/g, "i")
+                .replace(/[3]/g, "e")
+                .replace(/[0]/g, "o")
+                .replace(/[5\$]/g, "s")
+                .replace(/[7]/g, "t")
+                .toLowerCase();
+        }
+
+        function filter(text) {
+            const norm = normalizeText(text);
+            for (const w of bannedWords) {
+                if (new RegExp(`\\b${w}\\b`, "i").test(norm)) {
+                    return "*".repeat(text.length);
+                }
+            }
+            return text;
+        }
+
+        /* ===== AUTH ===== */
+        function fakeEmail(name) {
+            return name.toLowerCase() + "@bluebasket.chat";
+        }
+
+        function signUp() {
+            const name = usernameInput.value.trim();
+            const pass = passwordInput.value;
+
+            if (!name || name.length > 20) {
+                authError.textContent = "Username must be 1–20 characters.";
+                return;
+            }
+            if (pass.length < 8 || pass.length > 12) {
+                authError.textContent = "Password must be 8–12 characters.";
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(fakeEmail(name), pass)
+                .then(cred => usersRef.child(cred.user.uid).set({
+                    name
+                }))
+                .catch(err => authError.textContent = err.message);
+        }
+
+        function signIn() {
+            auth.signInWithEmailAndPassword(
+                fakeEmail(usernameInput.value.trim()),
+                passwordInput.value
+            ).catch(err => authError.textContent = err.message);
+        }
+
+        passwordInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") signIn();
+        });
+
+        /* ===== AUTH STATE ===== */
+        auth.onAuthStateChanged(user => {
+            if (!user) return;
+            usersRef.child(user.uid).once("value", snap => {
+                username = snap.val().name;
+                authScreen.style.display = "none";
+                chatScreen.style.display = "flex";
+            });
+        });
+
+        /* ===== SEND ===== */
+        function sendMessage() {
+            const now = Date.now();
+            let text = messageInput.value.trim();
+
+            if (!text || text.length > 1000) return;
+            if (now - lastMessageTime < 3000) {
+                alert("Slow mode: wait 3 seconds");
+                return;
+            }
+
+            lastMessageTime = now;
+            chatRef.push({
+                name: username,
+                text: filter(text),
+                time: now
+            });
+
+            messageInput.value = "";
+        }
+
+        messageInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") sendMessage();
+        });
+
+        /* ===== RECEIVE ===== */
+        chatRef.limitToLast(200).on("child_added", snap => {
+            const msg = snap.val();
+            const div = document.createElement("div");
+            div.className = "message";
+            div.id = snap.key;
+
+            const nameSpan = document.createElement("span");
+            const isAdmin = msg.name === ADMIN_NAME;
+
+            nameSpan.className = isAdmin ? "admin-name" : "name";
+            nameSpan.textContent = isAdmin ?
+                `${msg.name} 🛠: ` :
+                `${msg.name}: `;
+
+            const textSpan = document.createElement("span");
+            textSpan.textContent = msg.text;
+
+            div.appendChild(nameSpan);
+            div.appendChild(textSpan);
+
+            if (username === ADMIN_NAME) {
+                const del = document.createElement("span");
+                del.textContent = "     𝙳𝚎𝚕𝚎𝚝𝚎 𝚌𝚘𝚖𝚖𝚎𝚗𝚝";
+                del.className = "delete-btn";
+                del.addEventListener("click", () => {
+                    chatRef.child(snap.key).remove();
+                });
+                div.appendChild(del);
+            }
+
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        });
+
+        /* ===== DELETE HANDLER (FIX) ===== */
+        chatRef.on("child_removed", snap => {
+            const el = document.getElementById(snap.key);
+            if (el) el.remove();
+        });
+    </script>
+
+
+
+</body>
+
+</html>
