@@ -1,0 +1,315 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    word-wrap: break-word;
+    /*white-space: nowrap;*/
+}
+
+.bootstrapMenu span,
+.bootstrapMenu a {
+    cursor: default;
+}
+
+#view {
+    height: 100%;
+    width: 100%;
+    min-width: 800px;
+    display: flex;
+    flex-direction: row;
+}
+
+#sidebar {
+    color: white;
+    text-align: center;
+    background-color: #333;
+    display: flex;
+    height: 100%;
+    flex: 0 0 200px;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.header {
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    color: #ddd;
+    flex: 0 0 auto;
+}
+
+#textViewButtons,
+#treeViewButtons,
+#aboutButtons {
+    padding: 8px;
+    flex: 0 0 auto;
+}
+
+#leftbottomabs {
+    position: absolute;
+    bottom: 6px;
+    left: 0px;
+    width: 200px;
+    height: 200px;
+    background-color: #333;
+    z-index: 20;
+}
+
+.bottomSeparator {
+    flex-grow: 1;
+}
+
+#sidebarbottom {
+    background-color: #333;
+    width: 200px;
+    flex: 0 0 200px;
+}
+
+#rightsidebar {
+    background-color: #333;
+    flex: 0 0 0px;
+}
+
+#content {
+    height: 100%;
+    flex: 1 1 auto;
+    flex-grow: 1;
+    cursor: default;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+#livePreview {
+    flex: 1;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+}
+
+#liveFrame {
+    height: 100%;
+}
+
+#textView {
+    flex: 1;
+    display: flex;
+    color: black;
+    font: normal 13px 'Lucida Console', Monaco, monospace;
+}
+
+pre {
+    padding: 0;
+    border: 0;
+}
+
+.hljs {
+    padding: 0;
+}
+
+code {
+    cursor: text;
+}
+
+textarea {
+    flex: 1;
+    resize: none;
+}
+
+.separator {
+    height: 8px;
+}
+
+.fa-fw {
+    vertical-align: -1px;
+}
+
+.btn-sm {
+    padding: 5px 10px 4px 10px;
+}
+
+#treeView {
+    margin: 9px;
+    margin-bottom: 50vh;
+    font: normal 11px arial;
+    color: black;
+    height: max-content;
+    width: 100%;
+}
+
+.btn.focus,
+.btn.active.focus {
+    outline: none;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.img {
+    display: inline-block;
+    width: 15px;
+    height: 19px;
+    vertical-align: middle;
+    background-image: url(images.png);
+}
+
+.space {
+    background: none;
+}
+
+.value {
+    background-position: 0 0;
+}
+
+.array {
+    background-position: -60px 0;
+}
+
+.object {
+    background-position: -75px 0;
+}
+
+.nodeExpandRoot {
+    background-position: -150px 0;
+}
+
+.nodeExpand {
+    background-position: -165px 0;
+}
+
+.nodeExpandEnd {
+    background-position: -180px 0;
+}
+
+.nodeCollapseRoot {
+    background-position: -195px 0;
+}
+
+.nodeCollapse {
+    background-position: -210px 0;
+}
+
+.nodeCollapseEnd {
+    background-position: -225px 0;
+}
+
+.node {
+    background-position: -120px 0;
+}
+
+.nodeRoot {
+    background-position: -90px 0;
+}
+
+.nodeLine {
+    background-position: -105px 0;
+}
+
+.nodeEnd {
+    background-position: -135px 0;
+}
+
+.stringValue {
+    background-position: -45px 0;
+}
+
+.numberValue {
+    background-position: -30px 0;
+}
+
+.booleanValue {
+    background-position: -15px 0;
+}
+
+.nullValue {
+    background-position: -45px 0;
+    background-position: 0 0;
+}
+
+.selectedRow {
+    background-color: #D9E9F9;
+    outline: 1px solid #9EBBD8;
+}
+
+.highlightedRow {
+    background-color: #D9E9F9;
+}
+
+#errorMessage {
+    color: white;
+}
+
+#sidebar .btn {
+    text-align: left;
+    padding-left: 20px;
+}
+
+button.btn {
+    cursor: default;
+}
+
+.btn-default {
+    color: #111;
+    background-color: #ddd;
+}
+
+.btn-default:hover {
+    background-color: white;
+}
+
+.smallIndentLeft {
+    padding-left: 2px;
+    cursor: text;
+    vertical-align: middle;
+}
+
+.copyrightText {
+    padding-top: 8px;
+    font-size: 12px;
+    font-family: Arial;
+    color: #ddd;
+}
+
+#editor {
+    width: 100%;
+    height: 100%;
+}
+
+#editableDiv {
+    cursor: text;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    width: 100%;
+    height: 100%;
+    padding: 3px;
+    outline: none
+}
+
+.mainPage {
+    background-color: #333;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainButton {
+    width: 200px;
+}
+
+.highlightedCode {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.linkColor,
+a.linkColor:hover,
+a.linkColor:visited,
+a.linkColor:active,
+a.linkColor:link,
+#copyrightName {
+    color: #ddd;
+}
