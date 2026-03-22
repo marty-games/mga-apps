@@ -1,226 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurboWarp OS - Loader</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TurboWarp OS</title>
 
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@700&display=swap");
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@700&display=swap");
 
-    :root {
-      --tw-red: #ff4c4c;
-      --bg-dark: #0a0a0a;
-      --glass: rgba(255, 255, 255, 0.03);
-      --border: rgba(255, 255, 255, 0.1);
-    }
+        :root {
+            --tw-red: #ff4c4c;
+            --tw-orange: #FFAB19;
+            --tw-cyan: #0ff;
+            --bg-dark: #000;
+        }
 
-    html, body {
-      margin: 0; padding: 0;
-      height: 100%;
-      background: var(--bg-dark);
-      color: white;
-      font-family: "IBM Plex Sans", sans-serif;
-      overflow: hidden;
-    }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            color: white;
+            font-family: "IBM Plex Sans", sans-serif;
+            overflow: hidden;
+        }
 
-    
-    .glow {
-      position: fixed;
-      width: 40vw; height: 40vw;
-      background: radial-gradient(circle, rgba(255, 76, 76, 0.15) 0%, transparent 70%);
-      top: -10vw; right: -10vw;
-      z-index: 0;
-    }
+        /* ===== Particle Canvas ===== */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background: black;
+        }
 
-   
-    #launcher {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
-    }
+        /* ===== UI Layer ===== */
+        #launcher {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transition: opacity 0.5s, transform 0.5s;
+        }
 
-    #menu {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      padding: 50px;
-      border-radius: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      text-align: center;
-    }
+        #menu {
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            text-align: center;
+        }
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 30px;
-      letter-spacing: -1px;
-      color: var(--tw-red);
-    }
+        h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            letter-spacing: -1px;
+            text-shadow: 0 0 10px var(--tw-cyan), 0 0 20px var(--tw-cyan), 0 0 40px var(--tw-cyan);
+        }
 
-    button {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: white;
-      padding: 18px 30px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.3s;
-      width: 280px;
-    }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-    button:hover {
-      background: var(--tw-red);
-      border-color: var(--tw-red);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(255, 76, 76, 0.2);
-    }
+        button {
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 5px #fff;
+            width: 340px;
+        }
 
-   
-    #boot-screen {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 100;
-      display: none; 
-      padding: 40px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 14px;
-      color: #00ff41; 
-      overflow: hidden;
-    }
+        .red-btn {
+            background: var(--tw-red);
+            box-shadow: 0 0 15px var(--tw-red), 0 0 30px var(--tw-red);
+        }
 
-    .line {
-      margin-bottom: 5px;
-      opacity: 0;
-      transform: translateX(-10px);
-      animation: lineIn 0.1s forwards;
-    }
+        .orange-btn {
+            background: var(--tw-orange);
+            box-shadow: 0 0 15px var(--tw-orange), 0 0 30px var(--tw-orange);
+        }
 
-    @keyframes lineIn {
-      to { opacity: 1; transform: translateX(0); }
-    }
+        button:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
 
-  
-    iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      border: none;
-      display: none;
-      z-index: 50;
-      background: #111;
-    }
-  </style>
+        /* ===== Loading & Viewport ===== */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: none;
+            padding: 40px;
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 14px;
+            color: #00ff41;
+            overflow: hidden;
+        }
+
+        .line {
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: lineIn 0.1s forwards;
+        }
+
+        @keyframes lineIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        iframe {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            z-index: 50;
+            background: #000;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="glow"></div>
+    <canvas id="bg-canvas"></canvas>
 
-<div id="launcher">
-  <div id="menu">
-    <h1>SCRATCH LAUNCHER</h1>
-    <button onclick="loadEditor()">SCRATCH EDITOR</button>
-    <button onclick="loadApp('packager/index.html')">TURBOWARP PACKAGER</button>
-    <button onclick="loadApp('unpackager/index.html')">TURBOWARP UNPACKAGER</button>
-  </div>
-</div>
+    <div id="launcher">
+        <div id="menu">
+            <h1>Scratch Launcher</h1>
+            <div class="btn-container">
+                <button class="orange-btn" onclick="loadEditor()">Scratch Editor</button>
+                <button class="red-btn" onclick="loadApp('packager/index.html')">TurboWarp Packager</button>
+                <button class="red-btn" onclick="loadApp('unpackager/index.html')">TurboWarp Unpackager</button>
+            </div>
+        </div>
+    </div>
 
-<div id="boot-screen"></div>
+    <div id="boot-screen"></div>
+    <iframe id="viewer"></iframe>
 
-<iframe id="viewer"></iframe>
+    <script>
+        /* ===== Particle background ===== */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
 
-<script>
-  const BASE = "https://cdn.jsdelivr.net/gh/Deformed-steve/the-chesse-stash@main/apps/Scratch/";
-  const EDITOR_BASE = "https://cdn.jsdelivr.net/gh/Deformed-steve/the-chesse-stash@main/apps/Scratch/main/";
+        const MAX_PARTICLES = 50;
+        const MAX_DISTANCE = 100;
+        const COLORS = ['#0ff', '#ff0', '#f0f', '#0f0', '#f0ff'];
 
-  function loadEditor() {
-    startBootSequence("Editor", () => loadWithBase("index.html", EDITOR_BASE));
-  }
+        function init() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            particlesArray = [];
+            for (let i = 0; i < MAX_PARTICLES; i++) particlesArray.push(new Particle());
+        }
 
-  function loadApp(path) {
-    const name = path.includes('unpack') ? "Unpackager" : "Packager";
-    startBootSequence(name, () => loadWithBase(path, BASE));
-  }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1.2;
+                this.speedY = (Math.random() - 0.5) * 1.2;
+                this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
 
-  function startBootSequence(appName, callback) {
-    const launcher = document.getElementById("launcher");
-    const bootScreen = document.getElementById("boot-screen");
-    
-    launcher.style.opacity = "0";
-    launcher.style.transform = "scale(0.9)";
-    
-    setTimeout(() => {
-      launcher.style.display = "none";
-      bootScreen.style.display = "block";
-      
-      const lines = [
-        `[SYSTEM] Initializing TurboWarp kernel...`,
-        `[NETWORK] Connecting to jsdelivr CDN...`,
-        `[FETCH] Requesting ${appName} modules...`,
-        `[LOADER] Patching Base HREF hooks...`,
-        `[RENDER] Injecting Virtual DOM...`,
-        `[SUCCESS] Kernel Handshake Complete.`,
-        `[EXEC] Starting ${appName.toUpperCase()}...`
-      ];
+        function connect() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a + 1; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MAX_DISTANCE) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0,255,255,${0.5 - dist / (2 * MAX_DISTANCE)})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
 
-      lines.forEach((text, i) => {
-        setTimeout(() => {
-          const div = document.createElement('div');
-          div.className = 'line';
-          div.textContent = `> ${text}`;
-          bootScreen.appendChild(div);
-        }, i * 250);
-      });
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connect();
+            requestAnimationFrame(animate);
+        }
 
-    
-      setTimeout(callback, lines.length * 280);
-    }, 400);
-  }
+        window.addEventListener('resize', init);
+        init();
+        animate();
 
-  
-  function loadWithBase(path, base) {
-    const iframe = document.getElementById("viewer");
-    const bootScreen = document.getElementById("boot-screen");
 
-    fetch(base + path)
-      .then(res => res.text())
-      .then(html => {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        doc.open();
-        doc.write(
-          html.replace(
-            /(href|src)=["'](?!https?:\/\/|data:|blob:)/g,
-            `$1="${base}`
-          )
-        );
-        doc.close();
-        
-        
-        setTimeout(() => {
-          bootScreen.style.opacity = "0";
-          setTimeout(() => {
-            bootScreen.style.display = "none";
-            iframe.style.display = "block";
-          }, 500);
-        }, 500);
-      })
-      .catch(err => {
-        alert("CRITICAL SYSTEM ERROR");
-        location.reload();
-      });
-  }
-</script>
+        /* ===== TURBOWARP LOADING LOGIC ===== */
+        const BASE = "https://cdn.jsdelivr.net/gh/Deformed-steve/the-chesse-stash@main/apps/Scratch/";
+        const EDITOR_BASE = "https://cdn.jsdelivr.net/gh/Deformed-steve/the-chesse-stash@main/apps/Scratch/main/";
 
+        function loadEditor() {
+            startBootSequence("Editor", () => loadWithBase("index.html", EDITOR_BASE));
+        }
+
+        function loadApp(path) {
+            const name = path.includes('unpack') ? "Unpackager" : "Packager";
+            startBootSequence(name, () => loadWithBase(path, BASE));
+        }
+
+        function startBootSequence(appName, callback) {
+            const launcher = document.getElementById("launcher");
+            const boot = document.getElementById("boot-screen");
+
+            launcher.style.opacity = "0";
+            launcher.style.transform = "scale(0.95)";
+
+            setTimeout(() => {
+                launcher.style.display = "none";
+                boot.style.display = "block";
+
+                const lines = [
+                    `[SYSTEM] Booting TurboWarp Kernel...`,
+                    `[NETWORK] Establishing CDN link...`,
+                    `[LOADER] Fetching ${appName}...`,
+                    `[EXEC] Initializing Environment...`
+                ];
+
+                lines.forEach((text, i) => {
+                    setTimeout(() => {
+                        const div = document.createElement('div');
+                        div.className = 'line';
+                        div.textContent = `> ${text}`;
+                        boot.appendChild(div);
+                    }, i * 200);
+                });
+
+                setTimeout(callback, lines.length * 250);
+            }, 500);
+        }
+
+        function loadWithBase(path, base) {
+            const iframe = document.getElementById("viewer");
+            const boot = document.getElementById("boot-screen");
+
+            fetch(base + path)
+                .then(res => res.text())
+                .then(html => {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc.open();
+                    // Patches relative links to work with CDN base
+                    doc.write(html.replace(/(href|src)=["'](?!https?:\/\/|data:|blob:)/g, `$1="${base}`));
+                    doc.close();
+
+                    setTimeout(() => {
+                        boot.style.opacity = "0";
+                        setTimeout(() => {
+                            boot.style.display = "none";
+                            iframe.style.display = "block";
+                        }, 500);
+                    }, 600);
+                })
+                .catch(err => {
+                    alert("SYSTEM FAILURE: Unable to load asset.");
+                    location.reload();
+                });
+        }
+    </script>
 </body>
+
 </html>
