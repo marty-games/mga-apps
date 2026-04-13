@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Search</title>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap");
+
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'IBM Plex Mono', monospace;
+            color: white;
+        }
+
+        h2 {
+            font-size: 3em;
+            text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+        }
+
+        /* ===== Search Container ===== */
+        .search-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            backdrop-filter: blur(10px);
+
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .search-wrapper h2 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+            margin-bottom: 25px;
+        }
+
+        .gcse-search {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #0ff;
+            text-shadow: 0 0 8px #0ff;
+            opacity: 0.8;
+        }
+
+        /* ===== Link Styling ===== */
+        .footer a {
+            color: #0ff;
+            text-decoration: none;
+            text-shadow: 0 0 8px #0ff;
+            transition: all 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #fff;
+            text-shadow: 0 0 12px #0ff, 0 0 20px #0ff;
+        }
+
+        .footer a:visited {
+            color: #0ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="search-wrapper">
+        <h2>GOOGLE SEARCH</h2>
+
+        <script async src="https://cse.google.com/cse.js?cx=d6d6bfacb44d04cd1"></script>
+        <div class="gcse-search"></div>
+    </div>
+
+    <div class="footer">
+        Made by Martin_MMC. © 2026 <a href="https://marty-games.github.io/">Marty Games</a>.
+    </div>
+
+</body>
+
+</html>
