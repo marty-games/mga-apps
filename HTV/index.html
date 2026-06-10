@@ -164,7 +164,7 @@ video#player {
 }
 
 /* =======================
-   FOOTER
+   FOOTER + DMCA
 ======================= */
 
 .footer {
@@ -176,6 +176,7 @@ video#player {
     border-top: 1px solid rgba(255,0,0,0.2);
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(6px);
+    line-height: 1.4;
 }
 
 /* =======================
@@ -214,10 +215,29 @@ video#player {
 <!-- LIBRARY -->
 <div id="lib"></div>
 
-<!-- FOOTER -->
+<!-- FOOTER + DMCA -->
 <div class="footer">
-    <strong>Disclaimer:</strong>
-    HTV does not host or distribute content. Users are responsible for their own media.
+
+<strong>Disclaimer & Copyright Policy</strong><br><br>
+
+HTV is a media player interface and does not host, store, or distribute any video content on external servers.<br><br>
+
+All media displayed is either:
+<br>• Loaded locally by the user
+<br>• Or referenced from user-provided JSON sources containing royalty-free or publicly available content<br><br>
+
+Users are solely responsible for ensuring they have legal rights to any media they load or store within the application.<br><br>
+
+HTV does not claim ownership of third-party content and is not responsible for how users add, manage, or use files locally.<br><br>
+
+<strong>DMCA Notice:</strong><br>
+HTV does not host external media. Responsibility for any infringing content lies with the user who added it.<br><br>
+
+<strong>Forking & Redistribution:</strong><br>
+This project may be forked, modified, or redistributed. The original developer is not responsible for any modified versions or third-party forks.<br><br>
+
+This software is provided “as is” without warranties of any kind.
+
 </div>
 
 <script>
@@ -236,7 +256,6 @@ const request = indexedDB.open("videoDB", 1);
 
 request.onupgradeneeded = function(e) {
     db = e.target.result;
-
     if (!db.objectStoreNames.contains("videos")) {
         db.createObjectStore("videos", { keyPath: "id", autoIncrement: true });
     }
@@ -289,7 +308,7 @@ function loadDB() {
 }
 
 /////////////////////////////////////////////////////
-// SAVE MULTI FILE FIX
+// SAVE (FIXED MULTI UPLOAD)
 /////////////////////////////////////////////////////
 
 function saveVideos(files) {
@@ -298,19 +317,14 @@ function saveVideos(files) {
     const store = tx.objectStore("videos");
 
     for (let file of files) {
-        store.add({
-            name: file.name,
-            file: file
-        });
+        store.add({ name: file.name, file });
     }
 
-    tx.oncomplete = () => {
-        init();
-    };
+    tx.oncomplete = () => init();
 }
 
 /////////////////////////////////////////////////////
-// DELETE VIDEO (LOCAL ONLY)
+// DELETE
 /////////////////////////////////////////////////////
 
 function deleteVideo(id) {
@@ -320,9 +334,7 @@ function deleteVideo(id) {
 
     store.delete(id);
 
-    tx.oncomplete = () => {
-        init();
-    };
+    tx.oncomplete = () => init();
 }
 
 /////////////////////////////////////////////////////
@@ -332,13 +344,11 @@ function deleteVideo(id) {
 function combine() {
 
     videos = [
-
         ...jsonVideos.map(v => ({
             name: v.title,
             url: v.src,
             source: "json"
         })),
-
         ...localVideos
     ];
 }
@@ -348,9 +358,7 @@ function combine() {
 /////////////////////////////////////////////////////
 
 function playVideo(url) {
-    const player = document.getElementById("player");
-    player.src = url;
-    player.play();
+    document.getElementById("player").src = url;
 }
 
 /////////////////////////////////////////////////////
@@ -389,10 +397,8 @@ function render() {
 /////////////////////////////////////////////////////
 
 async function init() {
-
     await loadJSON();
     await loadDB();
-
     combine();
     render();
 }
