@@ -1,34 +1,407 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Full Screen Embed</title>
+    <base href="https://gcore.jsdelivr.net/gh/hawkstudio900/HawkTV/">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #ff2a2a;
+            overflow-x: hidden;
+            background: #000;
+        }
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 20%, #1a0000 0%, transparent 40%),
+                radial-gradient(circle at 80% 30%, #2a0000 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, #0a0a0a 0%, transparent 50%);
+            animation: moveBg 12s infinite linear;
+            z-index: -1;
+            opacity: 0.75;
+        }
 
-    iframe {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      border: none;
-    }
-  </style>
+        @keyframes moveBg {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-10%, -5%);
+            }
+
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 22px;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: #ff2a2a;
+            text-shadow: 0 0 12px #ff0000, 0 0 25px #7a0000;
+        }
+
+        .search {
+            width: 260px;
+            padding: 9px;
+            border-radius: 6px;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 0, 0, 0.4);
+            color: #ff2a2a;
+            outline: none;
+        }
+
+        button {
+            background: rgba(10, 10, 10, 0.8);
+            color: #ff2a2a;
+            border: 1px solid rgba(255, 0, 0, 0.4);
+            padding: 9px 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+        }
+
+        .player-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px;
+        }
+
+        video#player {
+            width: 85%;
+            max-width: 950px;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 0, 0.25);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.15);
+        }
+
+        #lib {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .card {
+            width: 200px;
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: scale(1.07);
+            box-shadow: 0 0 18px rgba(255, 0, 0, 0.25);
+        }
+
+        .card video {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            filter: contrast(1.1) brightness(0.8);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 12px;
+            padding: 6px;
+            color: #ff4a4a;
+        }
+
+        /* DELETE BUTTON */
+        .deleteBtn {
+            width: 100%;
+            background: #111;
+            border: 1px solid red;
+            color: red;
+            cursor: pointer;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 25px;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid rgba(255, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            line-height: 1.4;
+        }
+
+        #fileInput {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-  <iframe 
-    src="https://hawkstudio900.github.io/HawkTV/"
-    allowfullscreen
-    loading="eager">
-  </iframe>
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="brand">HTV</div>
+
+        <input id="search" class="search" placeholder="Search videos...">
+
+        <button onclick="document.getElementById('fileInput').click()">
+            Add Videos
+        </button>
+
+    </div>
+
+    <input type="file" id="fileInput" accept="video/*" multiple>
+
+    <!-- PLAYER -->
+    <div class="player-container">
+        <video id="player" controls></video>
+    </div>
+
+    <!-- LIBRARY -->
+    <div id="lib"></div>
+
+    <!-- FOOTER + DMCA -->
+    <div class="footer">
+
+        <strong>Disclaimer & Copyright Policy</strong><br><br>
+
+        HTV is a media player interface and does not host, store, or distribute any video content on external servers.<br><br>
+
+        All media displayed is either:
+        <br>• Loaded locally by the user
+        <br>• Or referenced from user-provided JSON sources containing royalty-free or publicly available content<br><br>
+
+        Users are solely responsible for ensuring they have legal rights to any media they load or store within the application.<br><br>
+
+        HTV does not claim ownership of third-party content and is not responsible for how users add, manage, or use files locally.<br><br>
+
+        <strong>DMCA Notice:</strong><br>
+        HTV does not host external media. Responsibility for any infringing content lies with the user who added it.<br><br>
+
+        <strong>Forking & Redistribution:</strong><br>
+        This project may be forked, modified, or redistributed. The original developer is not responsible for any modified versions or third-party forks.<br><br>
+
+        This software is provided “as is” without warranties of any kind.
+
+    </div>
+
+    <script>
+        let db;
+        let jsonVideos = [];
+        let localVideos = [];
+        let videos = [];
+        let searchValue = "";
+
+        /////////////////////////////////////////////////////
+        // DB INIT
+        /////////////////////////////////////////////////////
+
+        const request = indexedDB.open("videoDB", 1);
+
+        request.onupgradeneeded = function(e) {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("videos")) {
+                db.createObjectStore("videos", {
+                    keyPath: "id",
+                    autoIncrement: true
+                });
+            }
+        };
+
+        request.onsuccess = function(e) {
+            db = e.target.result;
+            init();
+        };
+
+        /////////////////////////////////////////////////////
+        // LOAD JSON
+        /////////////////////////////////////////////////////
+
+        async function loadJSON() {
+            try {
+                const res = await fetch("./videos.json");
+                jsonVideos = await res.json();
+            } catch {
+                jsonVideos = [];
+            }
+        }
+
+        /////////////////////////////////////////////////////
+        // LOAD DB
+        /////////////////////////////////////////////////////
+
+        function loadDB() {
+
+            return new Promise((resolve) => {
+
+                const tx = db.transaction("videos", "readonly");
+                const store = tx.objectStore("videos");
+
+                const req = store.getAll();
+
+                req.onsuccess = function() {
+
+                    localVideos = req.result.map(v => ({
+                        id: v.id,
+                        name: v.name,
+                        file: v.file,
+                        url: URL.createObjectURL(v.file),
+                        source: "local"
+                    }));
+
+                    resolve();
+                };
+            });
+        }
+
+        /////////////////////////////////////////////////////
+        // SAVE (FIXED MULTI UPLOAD)
+        /////////////////////////////////////////////////////
+
+        function saveVideos(files) {
+
+            const tx = db.transaction("videos", "readwrite");
+            const store = tx.objectStore("videos");
+
+            for (let file of files) {
+                store.add({
+                    name: file.name,
+                    file
+                });
+            }
+
+            tx.oncomplete = () => init();
+        }
+
+        /////////////////////////////////////////////////////
+        // DELETE
+        /////////////////////////////////////////////////////
+
+        function deleteVideo(id) {
+
+            const tx = db.transaction("videos", "readwrite");
+            const store = tx.objectStore("videos");
+
+            store.delete(id);
+
+            tx.oncomplete = () => init();
+        }
+
+        /////////////////////////////////////////////////////
+        // COMBINE
+        /////////////////////////////////////////////////////
+
+        function combine() {
+
+            videos = [
+                ...jsonVideos.map(v => ({
+                    name: v.title,
+                    url: v.src,
+                    source: "json"
+                })),
+                ...localVideos
+            ];
+        }
+
+        /////////////////////////////////////////////////////
+        // PLAY
+        /////////////////////////////////////////////////////
+
+        function playVideo(url) {
+            document.getElementById("player").src = url;
+        }
+
+        /////////////////////////////////////////////////////
+        // RENDER
+        /////////////////////////////////////////////////////
+
+        function render() {
+
+            const lib = document.getElementById("lib");
+            lib.innerHTML = "";
+
+            videos
+                .filter(v => v.name.toLowerCase().includes(searchValue.toLowerCase()))
+                .forEach(v => {
+
+                    const isLocal = v.source === "local";
+
+                    lib.innerHTML += `
+            <div class="card" onclick="playVideo('${v.url}')">
+                <video src="${v.url}"></video>
+                <div class="title">${v.name}</div>
+
+                ${isLocal ? `
+                    <button class="deleteBtn"
+                        onclick="event.stopPropagation(); deleteVideo(${v.id})">
+                        Delete
+                    </button>
+                ` : ""}
+            </div>
+        `;
+                });
+        }
+
+        /////////////////////////////////////////////////////
+        // INIT
+        /////////////////////////////////////////////////////
+
+        async function init() {
+            await loadJSON();
+            await loadDB();
+            combine();
+            render();
+        }
+
+        /////////////////////////////////////////////////////
+        // SEARCH
+        /////////////////////////////////////////////////////
+
+        document.getElementById("search").addEventListener("input", e => {
+            searchValue = e.target.value;
+            render();
+        });
+
+        /////////////////////////////////////////////////////
+        // INPUT
+        /////////////////////////////////////////////////////
+
+        document.getElementById("fileInput").addEventListener("change", e => {
+            saveVideos(e.target.files);
+        });
+    </script>
+
 </body>
+
 </html>
