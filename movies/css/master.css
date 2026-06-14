@@ -1,0 +1,147 @@
+@import url(themes.css?v=2);
+@import url(main.css?v=2);
+@import url(nav.css?v=2);
+
+@font-face {
+  font-family: "gg sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url(/assets/fonts/ggsans.woff2) format("woff2");
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html, div, span, p, a, button, input {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+}
+
+body {
+  background-image: var(--background);
+  background-color: var(--bg-color, #0f0f0f);
+  color: var(--text-color);
+  min-height: 100vh;
+  position: relative;
+  text-align: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -3;
+
+  --grid-size: 42px;
+  --grid-line: rgba(255, 255, 255, 0.08);
+  --grid-glow: rgba(255, 255, 255, 0.03);
+
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, var(--grid-glow), transparent 55%);
+
+  background-size:
+    var(--grid-size) var(--grid-size),
+    var(--grid-size) var(--grid-size),
+    900px 900px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  body::before {
+    animation: none;
+  }
+  .sidebar,
+  .nav-overlay,
+  .glass-card,
+  .wide-glass-card,
+  :root[theme="dark"] .dark-search,
+  body[theme="dark"] .dark-search {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+.low-power-mode body::before,
+.power-saving body::before,
+html.power-saving body::before {
+  animation: none !important;
+  background-image: none !important;
+}
+
+.low-power-mode canvas,
+.power-saving canvas,
+html.power-saving canvas {
+  display: none !important;
+}
+
+html.power-saving .glass-card,
+html.power-saving .wide-glass-card,
+html.power-saving .sidebar,
+html.power-saving .nav-overlay {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.low-power-mode *,
+.power-saving *,
+html.power-saving * {
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+.low-power-mode body,
+.power-saving body,
+html.power-saving body {
+  background-color: #0f0f16 !important;
+}
+
+.sitewrap,
+#mainframe {
+  transition: height 0.05s ease-out;
+}
+
+body.app-mode .sitewrap {
+  background: transparent;
+}
+
+#mainframe {
+  background: transparent;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  :root[theme="main"]:not(.has-custom-bg),
+  body[theme="main"]:not(.has-custom-bg) {
+    background-image: linear-gradient(135deg, #3b0a3f 0%, #5b1a6e 40%, #3c1361 100%) !important;
+  }
+
+  body::before {
+    opacity: 0.75 !important;
+  }
+
+  canvas {
+    opacity: 0.9;
+  }
+}
