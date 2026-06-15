@@ -3,33 +3,433 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HawkTV Embed</title>
+<title>HawkTV</title>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    overflow: hidden;
+body{
+    margin:0;
+    background:#000;
+    color:#ff2a2a;
+    font-family:Arial, sans-serif;
 }
 
-iframe {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+.page{
+    max-width:1000px;
+    margin:0 auto;
+    padding:10px 12px 25px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #330000;
+}
+
+.title{
+    font-size:20px;
+    font-weight:bold;
+}
+
+#search{
+    width:200px;
+    padding:6px;
+    background:#000;
+    color:#ff2a2a;
+    border:1px solid #aa0000;
+}
+
+#playerBox{
+    width:100%;
+    height:420px;
+    margin-top:12px;
+    border:2px solid #aa0000;
+    border-radius:6px;
+    overflow:hidden;
+    background:black;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:0;
+}
+
+/* CATEGORY BAR */
+.categories{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.cat{
+    padding:6px 10px;
+    border:1px solid #aa0000;
+    cursor:pointer;
+    font-size:12px;
+    background:#111;
+}
+
+.cat:hover{
+    background:#220000;
+}
+
+/* GRID */
+.grid{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+    gap:12px;
+}
+
+.card{
+    background:#111;
+    border:1px solid #220000;
+    border-radius:6px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:scale(1.05);
+    border-color:#ff2a2a;
+}
+
+.thumb{
+    width:100%;
+    height:120px;
+    object-fit:cover;
+}
+
+.info{
+    padding:8px;
+}
+
+.titleText{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.desc{
+    font-size:11px;
+    color:#cc6666;
 }
 </style>
 </head>
 
 <body>
 
-<!-- FULLSCREEN EMBED -->
-<iframe src="https://hawkstudio900.github.io/32WATCHhtv/"></iframe>
+<div class="page">
+
+<div class="header">
+    <div class="title">HawkTV</div>
+    <input id="search" placeholder="search...">
+</div>
+
+<div id="playerBox">Select a video</div>
+
+<div class="categories">
+    <div class="cat" data-cat="all">All</div>
+    <div class="cat" data-cat="Documentary">Documentary</div>
+    <div class="cat" data-cat="Educational">Educational</div>
+    <div class="cat" data-cat="Movies and Films">Movies and Films</div>
+    <div class="cat" data-cat="Gaming">Gaming</div>
+    <div class="cat" data-cat="Challenge">Challenge</div>
+    <div class="cat" data-cat="Minecraft">Minecraft</div>
+    <div class="cat" data-cat="News">News</div>
+    <div class="cat" data-cat="Cartoon">Cartoon</div>
+    <div class="cat" data-cat="Mumin(1969)">Mumin(1969)</div>
+    <div class="cat" data-cat="Anime">Anime</div>
+    <div class="cat" data-cat="EscapeToTheCountry(S25)">EscapeToTheCountry(S25)</div>
+    <div class="cat" data-cat="MrBeast">MrBeast</div>
+    <div class="cat" data-cat="MattBatista">MattBatista</div>
+    <div class="cat" data-cat="Sitcom">Sitcom</div>
+    <div class="cat" data-cat="JarToon">JarToon</div>
+    <div class="cat" data-cat="Simpsons">Simpsons</div>
+    <div class="cat" data-cat="Music">Music</div>
+    <div class="cat" data-cat="SickickMusic">SickickMusic</div>
+    <div class="cat" data-cat="FamilyGuy">FamilyGuy</div>
+    <div class="cat" data-cat="DD1934">DD1934</div>
+    <div class="cat" data-cat="MontyPythonHG">MontyPythonHG</div>
+    
+</div>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const playerBox = document.getElementById("playerBox");
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+
+let currentCategory = "all";
+
+/* =========================================================
+   🎬 YOUR VIDEOS (UNCHANGED)
+   ========================================================= */
+
+const videos = [
+{
+    title:"The best of Simpsons season 11",
+    desc:"The funniest moments in the Simpsons",
+    id:"lm5WwjCAsk4",
+    cat:["Cartoon","Movies and Films","Sitcom","Simpsons"]
+},
+{
+    title:"Simpsons - Talkin' Softball",
+    desc:"Simpsons ending theme",
+    id:"IAJHDiO8Fr0",
+    cat:["Cartoon","Movies and Films","Sitcom","Simpsons"]
+},
+{ 
+    title:"Mumin1969:The Secret of the Silk Hat",
+    desc:"S1E1",
+    id:"R3l77LjCkOc",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{
+    title:"Mumin1969:Aim for the Devil's Heart",
+    desc:"S1E2 - 悪魔のハートをねらえ",
+    id:"MXGIj8lalJY",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{ 
+    title:"Mumin1969:Rain! Storm!! Flood!!!",
+    desc:"S1E3 - 雨だ!あらしだ!!洪水だ!!!",
+    id:"Hs3tZFIXE8s",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{
+    title:"Where is the Wonderful Spring?",
+    desc:"S1E4 ふしぎの泉はどこにある?",
+    id:"wzrs89lYRIE",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{
+    title:"Papa's Remembered Rifle",
+    desc:"S1E5 パパの思い出のライフル",
+    id:"zffrH3s6F1U",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{  
+    title:"Nonnon Who Comes Back",
+    desc:"S1E6 かえってきたノンノン",
+    id:"3dvQuytCcb0",
+    cat:["Cartoon","Mumin(1969)","Movies and Films","Anime"]
+},
+{  
+    title:"The ENTIRE Story of The Simpson in 90 Minutes",
+    desc:"Get ready to dive deep into the world of Springfield! In this video, we cover over three decades of The Simpsons!",
+    id:"gf2FmRM1p0E",
+    cat:["Cartoon","Movies and Films","Documentary","JarToon","Simpsons","Sitcom"]
+},
+{  
+    title:"The ENTIRE Story Of Futurama in 77 Minutes",
+    desc:"Prepare for a journey through the wacky, heartfelt, and hilarious universe of Futurama!",
+    id:"gaeKUAiRToo",
+    cat:["Cartoon","Movies and Films","Documentary","JarToon","Sitcom"]
+},
+{  
+    title:"The Entire Story of Family Guy In 62 Minutes",
+    desc:"Dive into the wild and hilarious world of Family Guy as we break down every major moment, character, and iconic episode in this one-hour recap!",
+    id:"odtQ9ZMLxGY",
+    cat:["Cartoon","Movies and Films","Documentary","JarToon","Sitcom"]
+},
+{  
+    title:"Sickick - Epic Post Malone Mashup (Live)",
+    desc:"Watch Sickick's Epic Live Post Malone Mashup.",
+    id:"9DIqnFqYeTE",
+    cat:["Music","SickickMusic"]
+},
+{  
+    title:"Sickick - Mind Games (Robbe Remix)",
+    desc:"Remix by Robbe.",
+    id:"gidSH8sw6I0",
+    cat:["Music","SickickMusic"]
+},
+{  
+    title:"relax your mind",
+    desc:"relax your mind. | dark ambient playlist for sleep",
+    id:"hXfwXzgSgTE",
+    cat:["Music"]
+},
+{  
+    title:"The Simpsons - Balenciaga ",
+    desc:"Not an official episode - it's an advertisement in a form of an episode",
+    id:"PZHESOq-Gkw",
+    cat:["Cartoon","Movies and Films","Sitcom","Simpsons"]
+},
+{  
+    title:"Family Guy’s Lost 1998 Pilot (Full Version) [1080p FOUND]",
+    desc:"FamilyGuyS0E1",
+    id:"XF7UuM3N_pM",
+    cat:["Cartoon","Movies and Films","Sitcom","FamilyGuy"]
+},
+{  
+    title:"DonaldDS1E1 Orphan's Benefit",
+    desc:"S1E1(1934)",
+    id:"qIpc-A2tbkA",
+    cat:["Cartoon","Movies and Films","DD1934"]
+},
+{  
+    title:"DonaldDS1E2 The Dognapper",
+    desc:"S1E2 (1934)",
+    id:"GUWaH1ZvB1s",
+    cat:["Cartoon","Movies and Films","DD1934"]
+},
+{  
+    title:"HolyGrail(PART1)",
+    desc:"part 1 of full movie",
+    id:"q0CJ7k99mso",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART2)",
+    desc:"part 2 of full movie",
+    id:"-78rPpQTeZU",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART3)",
+    desc:"part 3 of full movie",
+    id:"NZTYCS1UgKw",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART4)",
+    desc:"part 4 of full movie",
+    id:"fEWChiUHyRU",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART5)",
+    desc:"part 5 of full movie",
+    id:"NIUR1Y5e7XY",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART6)",
+    desc:"part 6 of full movie",
+    id:"glyf2IVxPg0",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART7)",
+    desc:"part 7 of full movie",
+    id:"6PW-lG-q5DM",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART8)",
+    desc:"part 8 of full movie",
+    id:"7OdLglfsjN4",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"HolyGrail(PART9)",
+    desc:"part 9 of full movie",
+    id:"VkUmCM2Qcpg",
+    cat:["Movies and Films","MontyPythonHG"]
+},
+{  
+    title:"Always Look on the bright side of life - Monty Python's Life or Brian",
+    desc:"Film ending",
+    id:"jHPOzQzk9Qo",
+    cat:["Movies and Films"]
+},
+    
+];
+
+/* ========================================================= */
+
+function ytEmbed(id){
+    return `https://www.youtube-nocookie.com/embed/${id}`;
+}
+
+function ytThumb(id){
+    return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+}
+
+// PLAYER
+function play(video){
+    playerBox.innerHTML = `
+        <iframe
+            src="${ytEmbed(video.id)}"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        ></iframe>
+    `;
+}
+
+// GRID
+function render(list){
+    grid.innerHTML = "";
+
+    list.forEach(video => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <img class="thumb" src="${ytThumb(video.id)}">
+            <div class="info">
+                <div class="titleText">${video.title}</div>
+                <div class="desc">${video.desc}</div>
+            </div>
+        `;
+
+        card.onclick = () => play(video);
+        grid.appendChild(card);
+    });
+}
+
+/* =========================================================
+   ✅ FIXED CATEGORY FILTER (THIS WAS BROKEN)
+   ========================================================= */
+
+function applyFilters(){
+
+    const q = search.value.toLowerCase();
+
+    const filtered = videos.filter(v => {
+
+        const matchText =
+            v.title.toLowerCase().includes(q) ||
+            v.desc.toLowerCase().includes(q);
+
+        const matchCat =
+            currentCategory === "all" ||
+            (Array.isArray(v.cat) && v.cat.includes(currentCategory));
+
+        return matchText && matchCat;
+    });
+
+    render(filtered);
+}
+
+// SEARCH
+search.addEventListener("input", applyFilters);
+
+// CATEGORY CLICK
+document.querySelectorAll(".cat").forEach(btn => {
+    btn.addEventListener("click", () => {
+        currentCategory = btn.dataset.cat;
+        applyFilters();
+    });
+});
+
+// INIT
+render(videos);
+if(videos.length > 0) play(videos[12]);
+
+});
+</script>
 
 </body>
 </html>
