@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        p {
+            color: #2c3e50;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .result-container {
+            background-color: #f0f0f0;
+            padding: 12px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+
+        #password {
+            font-family: monospace;
+            color: #222;
+        }
+
+        .btn-copy {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-copy:hover {
+            background-color: #45a049;
+        }
+
+        .setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        label {
+            color: #555;
+        }
+
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-generate {
+            display: block;
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-generate:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Password Generator</h2>
+
+        <div class="result-container">
+            <span id="password">Click Generate</span>
+            <button class="btn-copy" id="copy">Copy</button>
+        </div>
+
+        <div class="settings">
+            <div class="setting">
+                <label for="length">Password Length</label>
+                <input type="number" id="length" min="4" max="64" value="16">
+            </div>
+            <div class="setting">
+                <label for="uppercase">Include Uppercase</label>
+                <input type="checkbox" id="uppercase" checked>
+            </div>
+            <div class="setting">
+                <label for="lowercase">Include Lowercase</label>
+                <input type="checkbox" id="lowercase" checked>
+            </div>
+            <div class="setting">
+                <label for="numbers">Include Numbers</label>
+                <input type="checkbox" id="numbers" checked>
+            </div>
+            <div class="setting">
+                <label for="symbols">Include Symbols</label>
+                <input type="checkbox" id="symbols" checked>
+            </div>
+        </div>
+
+        <button class="btn-generate" id="generate">Generate Password</button>
+        <p>Made for <a href="https://marty-games.github.io">Marty Games</a>.</p>
+
+    </div>
+
+    <script>
+        const passwordEl = document.getElementById('password');
+        const lengthEl = document.getElementById('length');
+        const uppercaseEl = document.getElementById('uppercase');
+        const lowercaseEl = document.getElementById('lowercase');
+        const numbersEl = document.getElementById('numbers');
+        const symbolsEl = document.getElementById('symbols');
+        const generateEl = document.getElementById('generate');
+        const copyEl = document.getElementById('copy');
+
+        const chars = {
+            lower: 'abcdefghijklmnopqrstuvwxyz',
+            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            number: '0123456789',
+            symbol: '!@#$%^&*()_+~`|}{[]:;?><,./-='
+        };
+
+        // Generate password function
+        function generatePassword() {
+            let length = +lengthEl.value;
+
+            // Cap length to reasonable values
+            if (length < 4) length = 4;
+            if (length > 64) length = 64;
+            lengthEl.value = length;
+
+            let allowedChars = '';
+            let generatedPassword = '';
+
+            if (lowercaseEl.checked) allowedChars += chars.lower;
+            if (uppercaseEl.checked) allowedChars += chars.upper;
+            if (numbersEl.checked) allowedChars += chars.number;
+            if (symbolsEl.checked) allowedChars += chars.symbol;
+
+            if (allowedChars === '') {
+                return 'Select at least one option!';
+            }
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * allowedChars.length);
+                generatedPassword += allowedChars[randomIndex];
+            }
+
+            return generatedPassword;
+        }
+
+        // Event listener for generate button
+        generateEl.addEventListener('click', () => {
+            passwordEl.innerText = generatePassword();
+        });
+
+        // Event listener for copy button
+        copyEl.addEventListener('click', () => {
+            const password = passwordEl.innerText;
+
+            if (!password || password === 'Click Generate' || password === 'Select at least one option!') {
+                return;
+            }
+
+            navigator.clipboard.writeText(password).then(() => {
+                const originalText = copyEl.innerText;
+                copyEl.innerText = 'Copied!';
+                setTimeout(() => {
+                    copyEl.innerText = originalText;
+                }, 2000);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
