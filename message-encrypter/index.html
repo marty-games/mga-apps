@@ -11,463 +11,257 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #202327;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            overflow-y: hidden;
-            overflow-x: hidden;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
-            background-color: #2d3339;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            width: 600px;
-            text-align: center;
-            position: relative;
-            border: 5.5px;
-            border-style: solid;
-            border-color: #4f5964;
-            overflow-y: hidden;
-            overflow-x: hidden;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
         }
 
-        .frequency-container {
-            margin-bottom: 10px;
-            color: #f0f0f0;
-            text-align: left;
-        }
-
-        .frequency-container label {
-            display: block;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 15px;
         }
 
-        #frequencySlider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 10px;
-            background: #4f5963;
-            border-radius: 5px;
-            outline: none;
-            opacity: 0.9;
-            transition: opacity .15s ease-in-out;
+        .nav-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background-color: #e9ecef;
+            color: #495057;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-icon:hover {
+            background-color: #dee2e6;
+            color: #212529;
+        }
+
+        h2 {
+            margin: 0 0 5px 0;
+            color: #222;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        h4 {
+            margin: 0 0 25px 0;
+            color: #777;
+            text-align: center;
+            font-weight: normal;
+            font-size: 0.95rem;
+        }
+
+        h3 {
+            margin: 0 0 15px 0;
+            color: #222;
+        }
+
+        .input-container {
             position: relative;
-            margin-top: 5px;
-        }
-
-        #frequencySlider:hover {
-            opacity: 1;
-        }
-
-        #frequencySlider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #21d498;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-            transition: background-color 0.3s ease;
-        }
-
-        #frequencySlider::-webkit-slider-thumb:hover {
-            background: #1fd699;
-        }
-
-        #frequencySlider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #21d498;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-            transition: background-color 0.3s ease;
-        }
-
-        #frequencySlider::-moz-range-thumb:hover {
-            background: #38e0a8;
-        }
-
-        #frequencySlider::-moz-range-track {
-            background: #4f5963;
-            height: 10px;
-            border-radius: 5px;
-        }
-
-        #frequencySlider::-ms-thumb {
-            width: 20px;
-            height: 20px;
-            background: #1fc78f;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-            transition: background-color 0.3s ease;
-        }
-
-        #frequencySlider::-ms-thumb:hover {
-            background: #38e0a8;
-        }
-
-        #frequencySlider::-ms-track {
-            background: #4f5963;
-            height: 10px;
-            border-radius: 5px;
-            border-color: transparent;
-            color: transparent;
-        }
-
-        #frequencySlider::-ms-fill-lower {
-            background: #4f5963;
-            border-radius: 5px;
-        }
-
-        #frequencySlider::-ms-fill-upper {
-            background: #4f5963;
-            border-radius: 5px;
-        }
-
-        .history-button {
-            position: absolute;
-            top: 10px;
-            right: 66px;
-            width: 44.5px;
-            height: 40px;
-            border: none;
-            border-radius: 11px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
-            padding: 0;
-            font-weight: 6000;
-        }
-
-        .history-button:hover {
-            background-color: #41a3be;
-        }
-
-        .web-button {
-            position: absolute;
-            top: 10px;
-            left: 66px;
-            width: 44px;
-            height: 40px;
-            border: none;
-            border-radius: 11px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
-            padding: 0;
-        }
-
-        .web-button:hover {
-            background-color: #41a3be;
-        }
-
-        .git-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 44px;
-            height: 40px;
-            border: none;
-            border-radius: 11px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 26px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
-            padding: 0;
-        }
-
-        .git-button:hover {
-            background-color: #41a3be;
-        }
-
-        .settings-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 44px;
-            height: 40px;
-            border: none;
-            border-radius: 11px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 23px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s ease;
-            padding: 0;
-        }
-
-        .settings-button:hover {
-            background-color: #41a3be;
+            margin-bottom: 15px;
+            width: 100%;
         }
 
         textarea,
         input[type="text"] {
-            width: 90%;
-            margin-bottom: 5px;
-            padding: 10px;
-            border: 3px solid #4f5963;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: 'Roboto', sans-serif;
-            color: #fff;
-            background-color: #394047;
-            resize: none;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: #333333;
+            background-color: #ffffff;
         }
 
-        textarea:not(#vigenereKey),
-        input[type="text"]:not(#vigenereKey) {
-            padding-bottom: 95px;
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+            padding-right: 45px;
         }
 
-        textarea#vigenereKey,
-        input#vigenereKey {
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+        input[type="text"] {
+            padding-right: 40px;
         }
 
         ::placeholder {
-            color: white;
-            opacity: 0.7;
+            color: #999999;
+            opacity: 1;
         }
 
         textarea:focus,
         input:focus {
             outline: none;
-        }
-
-        button {
-            padding: 12px 110px;
-            margin: 5px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 11px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #41a3be;
-        }
-
-        h2 {
-            color: #f0f0f0;
-            margin-bottom: -10px;
-            font-weight: bold;
-            font-size: 30px;
-        }
-
-        h4 {
-            color: #f0f0f0;
-            margin: px;
-            padding: 0px 0px;
-            font-weight: bold;
-            font-size: 18px
-        }
-
-        h3 {
-            color: #f0f0f0;
-            margin-bottom: -5px;
-            margin-top: 7px;
-            padding: 0px 0px;
-            font-weight: bold;
-            font-size: 25px
-        }
-
-        .input-container {
-            position: relative;
-        }
-
-        .indicator {
-            position: absolute;
-            top: 9px;
-            right: 30px;
-            font-size: 23px;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
         }
 
         .clear-button {
             position: absolute;
-            top: 7px;
-            right: 25px;
-            padding: 7px 15.5px;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            color: white;
             border: none;
-            border-radius: 10px;
-            background-color: #e24646;
-            color: #f0f0f0;
+            padding: 6px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
         }
 
         .clear-button:hover {
-            background-color: #ff5c5c;
-        }
-
-        .blob-button {
-            position: relative;
-            top: px;
-            right: 0px;
-            padding: 9px 9px;
-            border: none;
-            border-radius: 10px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            margin: 2px;
-        }
-
-        .blob-button:hover {
-            background-color: #41a3be;
-        }
-
-        .blank-button {
-            position: relative;
-            top: px;
-            right: 0px;
-            padding: 9px 9px;
-            border: none;
-            border-radius: 10px;
-            background-color: #3b8ea5;
-            color: #f0f0f0;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            margin: 2px;
-            margin-left: 5px;
-        }
-
-        .blank-button:hover {
-            background-color: #41a3be;
+            background-color: #bd2130;
         }
 
         .copy-button {
             position: absolute;
-            top: 429px;
-            right: 45px;
-            padding: 7.5px 15px;
+            bottom: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
-            border-radius: 10.5px;
-            background-color: #0dbf84;
-            color: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-            align-items: left;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
         }
 
         .copy-button:hover {
-            background-color: #21d498;
+            background-color: #45a049;
         }
 
-        .status-message {
-            color: #f0f0f0;
-            margin-top: 10px;
-            font-weight: bold;
+        .indicator {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
         }
 
-        .vigenere-key {
+        .action-buttons {
+            display: flex;
+            gap: 12px;
             margin-bottom: 15px;
         }
 
+        .btn-action {
+            flex: 1;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0056b3;
+        }
+
+        .status-message {
+            text-align: center;
+            min-height: 20px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-top: 10px;
+        }
+
+        /* Modals & Settings Layout */
         .modal {
             display: none;
             position: fixed;
-            z-index: 10000000000000000000000000000000;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
             justify-content: center;
             align-items: center;
-            overflow: none;
         }
 
         .modal-content {
-            background-color: #2d3339;
-            border-radius: 15px;
-            padding: 15px 20px;
-            width: 480px;
-            text-align: center;
-            color: #f0f0f0;
-            max-height: 420px;
-            overflow-y: scroll;
-            border: 5.5px;
-            border-style: solid;
-            border-color: #4f5964;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            width: 100%;
+            max-width: 440px;
+            box-sizing: border-box;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            color: #333;
         }
 
         .modal-close {
-            color: #f0f0f0;
+            color: #aaa;
             float: right;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: -3px;
+            line-height: 1;
         }
 
-        .modal-close:hover,
-        .modal-close:focus {
-            color: #fff;
-            text-decoration: none;
-            cursor: pointer;
+        .modal-close:hover {
+            color: #333;
         }
 
-        .toggle-container {
-            text-align: left;
-            margin-top: 20px;
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
         }
 
-        .toggle-container label {
+        .setting {
             display: flex;
-            align-items: center;
-            margin-bottom: 9px;
-            font-size: 16px;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 0.95rem;
         }
 
+        /* Toggle Switches */
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 40px;
-            height: 20px;
+            height: 22px;
         }
 
         .toggle-switch input {
@@ -483,167 +277,237 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #a6a6a6;
-            transition: 0.4s;
-            border-radius: 20px;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 22px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px;
-            width: 14px;
+            height: 16px;
+            width: 16px;
             left: 3px;
             bottom: 3px;
             background-color: white;
-            transition: 0.4s;
+            transition: 0.3s;
             border-radius: 50%;
         }
 
         input:checked+.slider {
-            background-color: #21d498;
+            background-color: #4CAF50;
         }
 
         input:checked+.slider:before {
-            transform: translateX(20px);
+            transform: translateX(18px);
+        }
+
+        /* Frequency slider */
+        .frequency-container {
+            color: #555;
+            text-align: left;
+        }
+
+        .frequency-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        #frequencySlider {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .modal-footer-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Help desk text adjustments */
+        .help-text {
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #555;
         }
     </style>
 </head>
 
 <body>
+
     <div id="historyModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeHistoryModal()">&times;</span>
-            <h3>&nbsp&nbspHelp Desk (scroll for more)</h3>
-            <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
-            <label>hi there!</label>
-            <br>
-            <br>
-            <label>this a a neat little encoder/decoder tool made by dinguschan (dinguschan-owo!) use it to send secret messages to ur friends! by default it uses 9 encoding methods stacked on top of each other, which you can look at (and modify) in the settings popup ( <i class="fas fa-cog"></i> ) <br>
-                <br>this makes ur messages <i>super</i> &nbsphard to decode and read! and yes, your school admins can (and will) look at your chat messages sent on administration owned devices. encode your messages so they can't, or just don't send messages from those devices. remember kids, abstaination is the best form of prevention :D </label>
-            <br>
-            <br>you can even add a custom key to make it even harder to crack, but make sure that ur key is only one word long, or it will break your message (ill fix it later, i promise :3) by default the key is "KEYWORD" so make sure your key is something different to make your messages harder to crack. <br>
-            <br>if you want to turn off some encoding methods, just go into settings and flip the switch off for whichever method u don't like. you can also change the frequency of dead character injection (characters that don't translate to anything and are only used to jumble messages more) <br>
-            <br>please note that even though there are options to open this project in a cloaked tab, the function itself is kinda broken at the moment. you can still try, but there will be issues. im working on it. <br>
-            <br>ok! thats all! go use this cool little tool now! also please share it with ur friends cause it really helps me a lot, i promise :3 <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
+            <h3>Help Desk</h3>
+            <hr>
+            <div class="help-text">
+                <p><strong>Hi there!</strong></p>
+                <p>This is a neat little encoder/decoder tool made by dinguschan (dinguschan-owo!) Use it to send secret messages to your friends! By default, it uses 9 encoding methods stacked on top of each other, which you can look at (and modify) in the settings popup (<i class="fas fa-cog"></i>).</p>
+                <p>This makes your messages <em>super</em> hard to decode and read! And yes, your school admins can (and will) look at your chat messages sent on administration-owned devices. Encode your messages so they can't, or just don't send messages from those devices. Remember kids, abstaining is the best form of prevention :D</p>
+                <p>You can even add a custom key to make it even harder to crack, but make sure that your key is only one word long, or it will break your message (I'll fix it later, I promise :3). By default, the key is "KEYWORD", so make sure your key is something different to make your messages harder to crack.</p>
+                <p>If you want to turn off some encoding methods, just go into settings and flip the switch off for whichever method you don't like. You can also change the frequency of dead character injection (characters that don't translate to anything and are only used to jumble messages more).</p>
+                <p>Please note that even though there are options to open this project in a cloaked tab, the function itself is kinda broken at the moment. You can still try, but there will be issues. I'm working on it.</p>
+                <p>Ok! That's all! Go use this cool little tool now! Also please share it with your friends because it really helps me a lot, I promise :3</p>
+            </div>
+            <hr>
         </div>
     </div>
+
     <div class="container">
+        <div class="top-bar">
+            <div class="nav-group">
+                <button class="btn-icon" onclick="openGit()" title="GitHub"><i class="fa-brands fa-github"></i></button>
+                <button class="btn-icon" onclick="openWeb()" title="Website"><i class="fa-solid fa-globe"></i></button>
+            </div>
+            <div class="nav-group">
+                <button class="btn-icon" onclick="openHistoryModal()" title="Help"><i class="fa-solid fa-question"></i></button>
+                <button class="btn-icon" onclick="openModal()" title="Settings"><i class="fas fa-cog"></i></button>
+            </div>
+        </div>
+
         <h2>Encoder/Decoder</h2>
-        <h4> 𝙼𝚊𝚍𝚎 𝚋𝚢 𝚍𝚒𝚗𝚐𝚞𝚜𝚌𝚑𝚊𝚗! </h4>
-        <button class="settings-button" onclick="openModal()">
-            <i class="fas fa-cog"></i>
-        </button>
-        <button class="git-button" onclick="openGit()">
-            <i class="fa-brands fa-github"></i>
-        </button>
-        <button class="web-button" onclick="openWeb()">
-            <i class="fa-solid fa-globe"></i>
-        </button>
-        <button class="history-button" onclick="openHistoryModal()">
-            <i class="fa-solid fa-question"></i>
-        </button>
+        <h4>𝙼𝚊𝚍𝚎 𝚋𝚢 𝚍𝚒𝚗𝚐𝚞𝚜𝚌𝚑𝚊𝚗!</h4>
+
         <div class="input-container">
             <textarea id="inputMessage" placeholder="Enter your message here..."></textarea>
-            <button class="clear-button" onclick="clearInput()">
+            <button class="clear-button" onclick="clearInput()" title="Clear content">
                 <i class="fa-solid fa-trash-can"></i>
             </button>
         </div>
+
         <div class="input-container">
-            <input type="text" id="vigenereKey" class="vigenere-key" placeholder="Custom key: (One word)" oninput="validateKey()">
+            <input type="text" id="vigenereKey" placeholder="Custom key: (One word)" oninput="validateKey()">
             <i class="indicator" id="keyIndicator"></i>
         </div>
-        <div>
-            <button onclick="encodeMessage()">Encode</button>
-            <button onclick="decodeMessage()">Decode</button>
+
+        <div class="action-buttons">
+            <button class="btn-action" onclick="encodeMessage()">Encode</button>
+            <button class="btn-action" onclick="decodeMessage()">Decode</button>
         </div>
-        <textarea id="outputMessage" placeholder="Output will appear here..." readonly></textarea>
-        <button class="copy-button" onclick="copyOutput()">
-            <i class="fa-solid fa-copy"></i>
-        </button>
+
+        <div class="input-container">
+            <textarea id="outputMessage" placeholder="Output will appear here..." readonly></textarea>
+            <button class="copy-button" onclick="copyOutput()" title="Copy to Clipboard">
+                <i class="fa-solid fa-copy"></i>
+            </button>
+        </div>
+
         <div class="status-message" id="statusMessage"></div>
     </div>
+
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">&times;</span>
-            <h3>&nbsp&nbspSettings (scroll for more)</h3>
-            <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
-            <div class="toggle-container">
-                <label>Caesar Cipher <div class="toggle-switch">
+            <h3>Settings</h3>
+            <hr>
+            <div class="settings-list">
+                <div class="setting">
+                    <label for="toggleCaesar">Caesar Cipher</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleCaesar" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Octal <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleOctal">Octal</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleOctal" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Hexadecimal <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleHex">Hexadecimal</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleHex" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Binary <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleBinary">Binary</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleBinary" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Base64 <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleBase64">Base64</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleBase64" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>ROT13 <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleRot13">ROT13</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleRot13" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Vigenère Cipher <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleVigenere">Vigenère Cipher</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleVigenere" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Atbash <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleAtbash">Atbash</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleAtbash" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
-                <label>Dead Characters <div class="toggle-switch">
+                </div>
+                <div class="setting">
+                    <label for="toggleDeadLetters">Dead Characters</label>
+                    <div class="toggle-switch">
                         <input type="checkbox" id="toggleDeadLetters" checked>
                         <span class="slider"></span>
                     </div>
-                </label>
+                </div>
             </div>
-            <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
+            <hr>
             <div class="frequency-container">
                 <label for="frequencySlider">Dead Character Frequency:</label>
                 <input type="range" id="frequencySlider" min="1" max="10" value="1">
-                <br>
-                <br>
-                <span>&nbspEvery other character&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEvery 10 characters</span>
+                <div class="slider-labels">
+                    <span>Every other char</span>
+                    <span>Every 10 chars</span>
+                </div>
             </div>
-            <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
-            <button class="blob-button" onclick="createBlobUrl()">&nbspOpen blob:&nbsp <i class="fa-solid fa-up-right-from-square"></i>
-            </button>
-            <button class="blank-button" onclick="openInBlankTab()">&nbspOpen about:blank&nbsp <i class="fa-solid fa-up-right-from-square"></i>
-            </button>
-            <p>
-                <b>───────────────────────────────────────────</b>
-            </p>
+            <hr>
+            <div class="modal-footer-buttons">
+                <button class="btn-secondary" onclick="createBlobUrl()">Open blob <i class="fa-solid fa-up-right-from-square"></i></button>
+                <button class="btn-secondary" onclick="openInBlankTab()">Open about:blank <i class="fa-solid fa-up-right-from-square"></i></button>
+            </div>
         </div>
     </div>
-    </div>
+
     <script>
         function validateKey() {
             const key = document.getElementById('vigenereKey').value.trim();
@@ -651,9 +515,11 @@
             if (key.split(' ').length > 1) {
                 indicator.innerHTML = '<i class="fas fa-times-circle"></i>';
                 indicator.style.color = '#ff5c5c';
-            } else {
+            } else if (key.length > 0) {
                 indicator.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
                 indicator.style.color = '#21d498';
+            } else {
+                indicator.innerHTML = '';
             }
         }
 
@@ -739,6 +605,7 @@
                     decodedMessage = caesarDecode(decodedMessage);
                 }
                 document.getElementById('outputMessage').value = decodedMessage;
+                showMessage('Message decoded successfully', 'success');
             } catch (error) {
                 showMessage('An error occurred during decoding', 'error');
             }
@@ -747,21 +614,30 @@
         function clearInput() {
             document.getElementById('inputMessage').value = '';
             document.getElementById('outputMessage').value = '';
-            showMessage('Input and output cleared', '#ffff66');
+            showMessage('Inputs cleared', 'info');
         }
 
         function copyOutput() {
             const outputMessage = document.getElementById('outputMessage');
+            if (!outputMessage.value) return;
+
             outputMessage.select();
             outputMessage.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            showMessage('Output copied to clipboard', '#ffff66');
+            navigator.clipboard.writeText(outputMessage.value).then(() => {
+                showMessage('Copied to clipboard!', 'success');
+            });
         }
 
         function showMessage(message, type) {
             const statusMessage = document.getElementById('statusMessage');
             statusMessage.textContent = message;
-            statusMessage.style.color = type === 'error' ? '#ff5c5c' : (type === '#ffff66' ? '#ffff66' : '#21d498');
+            if (type === 'error') {
+                statusMessage.style.color = '#dc3545';
+            } else if (type === 'info') {
+                statusMessage.style.color = '#6c757d';
+            } else {
+                statusMessage.style.color = '#4CAF50';
+            }
             setTimeout(() => {
                 statusMessage.textContent = '';
             }, 3000);
@@ -769,12 +645,10 @@
 
         function openModal() {
             document.getElementById('settingsModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             document.getElementById('settingsModal').style.display = 'none';
-            document.body.style.overflow = '';
         }
 
         function caesarEncode(str, shift = 3) {
@@ -909,7 +783,7 @@
             });
             var blobUrl = URL.createObjectURL(blob);
             var newTab = window.open();
-            newTab.document.write(' < !DOCTYPE html >< html >< head >< title > Page Content < /title>< /head>< body >< /body>< /html>');
+            newTab.document.write('<!DOCTYPE html><html><head><title>Page Content</title></head><body></body></html>');
             newTab.document.close();
             newTab.location.href = blobUrl;
         }
@@ -923,12 +797,10 @@
 
         function openHistoryModal() {
             document.getElementById('historyModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
 
         function closeHistoryModal() {
             document.getElementById('historyModal').style.display = 'none';
-            document.body.style.overflow = '';
         }
 
         function openGit() {
@@ -936,7 +808,19 @@
         }
 
         function openWeb() {
-            window.open('https://marty-games.github.io/?id=160', '_blank');
+            window.open('https://marty-games.github.io/', '_blank');
+        }
+
+        // Close modals if background is clicked
+        window.onclick = function(event) {
+            const historyModal = document.getElementById('historyModal');
+            const settingsModal = document.getElementById('settingsModal');
+            if (event.target == historyModal) {
+                closeHistoryModal();
+            }
+            if (event.target == settingsModal) {
+                closeModal();
+            }
         }
     </script>
 </body>
