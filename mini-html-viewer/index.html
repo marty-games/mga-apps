@@ -1,45 +1,127 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<head></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini HTML Viewer</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --border-color: #e0e0e0;
+        }
+
+        /* Basic Reset & Dark Mode Friendly Setup */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Main Container Card */
+        .viewer-container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 1000px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        /* Custom File Upload Styling */
+        .file-upload-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .custom-file-upload {
+            border: 2px dashed var(--primary-color);
+            display: inline-block;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .custom-file-upload:hover {
+            background-color: rgba(74, 144, 226, 0.05);
+            border-color: var(--primary-hover);
+            color: var(--primary-hover);
+        }
+
+        #file-input {
+            display: none;
+            /* Hide the ugly default input */
+        }
+
+        /* The Iframe Viewer */
+        #viewer {
+            width: 100%;
+            height: 70vh;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
 
 <body>
-    <!DOCTYPE html>
-    <html>
 
-
-    <!-- made by me-->
-
-
-
-
-    <body>
+    <div class="viewer-container">
         <h2>Mini HTML Viewer</h2>
 
+        <div class="file-upload-wrapper">
+            <label for="file-input" class="custom-file-upload">
+                📁 Choose an HTML File
+            </label>
+            <input type="file" id="file-input" accept=".html">
+        </div>
 
-        <input type="file" id="file-input" accept=".html">
-        <iframe id="viewer" style="width:100%; height:80vh;"></iframe>
+        <iframe id="viewer" title="HTML Preview"></iframe>
+    </div>
 
+    <script>
+        document.getElementById('file-input').onchange = e => {
+            let file = e.target.files[0];
+            if (!file) return;
 
-        <script>
-            document.getElementById('file-input').onchange = e => {
-                let file = e.target.files[0];
-                let reader = new FileReader();
-
-
-                reader.onload = () => {
-                    document.getElementById('viewer').srcdoc = reader.result;
-                };
-
-
-                reader.readAsText(file);
+            let reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById('viewer').srcdoc = reader.result;
             };
-        </script>
+            reader.readAsText(file);
 
+            // Optional: Update button text to show the loaded file name
+            document.querySelector('.custom-file-upload').innerHTML = `📄 ${file.name}`;
+        };
+    </script>
 
-    </body>
-
-
-    </html>
 </body>
-<html>
+
+</html>
