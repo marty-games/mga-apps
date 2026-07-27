@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Generator</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #4da6ff;
+        }
+
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            width: 90%;
+            cursor: pointer;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: #4da6ff;
+            color: #121212;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #3388dd;
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .output-box {
+            margin-top: 20px;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 6px;
+            word-wrap: break-word;
+            text-align: left;
+            min-height: 40px;
+        }
+
+        a {
+            color: #4da6ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>URL Generator</h2>
+
+        <input type="file" id="fileInput" accept=".html,.htm">
+
+        <button id="btnBlank" disabled>1. Open in about:blank</button>
+        <button id="btnBlob" disabled>2. Generate Blob URL</button>
+        <button id="btnData" disabled>3. Generate & Copy Data URL</button>
+
+        <div class="output-box" id="output">
+            Upload an .html or .htm file to generate the urls.
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const btnBlank = document.getElementById('btnBlank');
+        const btnBlob = document.getElementById('btnBlob');
+        const btnData = document.getElementById('btnData');
+        const output = document.getElementById('output');
+
+        let fileText = '';
+        let dataUrlBase64 = '';
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (!file) {
+                btnBlank.disabled = btnBlob.disabled = btnData.disabled = true;
+                output.innerHTML = "Upload an .html or .htm file to unlock the buttons.";
+                return;
+            }
+
+            const textReader = new FileReader();
+            textReader.onload = (e) => {
+                fileText = e.target.result;
+                btnBlank.disabled = btnBlob.disabled = btnData.disabled = false;
+                output.innerHTML = "File loaded successfully! Select a generator option.";
+            };
+            textReader.readAsText(file);
+
+            const dataReader = new FileReader();
+            dataReader.onload = (e) => {
+                dataUrlBase64 = e.target.result;
+            };
+            dataReader.readAsDataURL(file);
+        });
+
+        btnBlank.addEventListener('click', () => {
+            const win = window.open('about:blank', '_blank');
+            if (win) {
+                win.document.open();
+                win.document.write(fileText);
+                win.document.close();
+                output.innerHTML = "Success! Opened in a new <b>about:blank</b> tab.";
+            } else {
+                output.innerHTML = "<span style='color:#ff4d4d;'>Error: Pop-up blocked! Please allow pop-ups to use this feature.</span>";
+            }
+        });
+
+        btnBlob.addEventListener('click', () => {
+            const blob = new Blob([fileText], {
+                type: 'text/html'
+            });
+            const blobUrl = URL.createObjectURL(blob) + '#do-not-share-this-link-it-will-not-work-for-others';
+
+            output.innerHTML = `
+            <strong>Blob URL Generated:</strong><br><br>
+            <a href="${blobUrl}" target="_blank">Click here to open your Blob URL</a>
+            <br><br>
+            <small style="color:#aaa;">Note: Blob URLs only work in the browser tab that generated them. If you refresh, it will expire.</small>
+        `;
+        });
+
+        btnData.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(dataUrlBase64);
+                output.innerHTML = `
+                    <strong>Data URL Copied! ✅</strong><br><br>
+                    <span style="color:#4da6ff;">The massive string was copied directly to your clipboard.</span><br><br>
+                    <small style="color:#aaa;">Paste it into a new tab's address bar to view it.</small>
+                `;
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                output.innerHTML = "<span style='color:#ff4d4d;'>Error: Couldn't copy to clipboard. Ensure your browser permits clipboard access.</span>";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
